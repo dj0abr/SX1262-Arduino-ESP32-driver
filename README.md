@@ -46,6 +46,8 @@ More wiring examples can be found in the source file and below in the minimal ex
 
 ## Minimal Example
 
+Minimal code to configure the SX126x/LLCC68 LoRa module. When configuration is complete simply use Send(...) or Receive(...) to transmit and receive data.
+
 ```cpp
 #define RF_FREQUENCY         433000000
 #define TX_OUTPUT_POWER      22
