@@ -1,6 +1,6 @@
 # SX126x Arduino/ESP32 Library
 
-A modern, clean, and well-documented Arduino library for the Semtech SX126x LoRa transceivers (SX1261, SX1262, SX1268).
+A modern, clean, and well-documented Arduino library for the Semtech SX126x LoRa transceivers (SX1262, SX1268, LLCC68).
 **Designed by [DJ0ABR](https://github.com/DJ0ABR)**
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
