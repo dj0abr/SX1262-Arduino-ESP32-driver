@@ -96,6 +96,7 @@ bool LORA::begin() {
 
 - **TCXO:** For boards with an internal TCXO (e.g., Heltec V3, E22-400M33S), set `useTCXO` to `SX126X_DIO3_OUTPUT_1_8`.
 - **External PA:** For modules with an external PA (such as E22-400M33S), ensure you provide enough supply voltage (typically ≥5 V for full 2 W output).
+- **Ext.PA control:** use SetRxTxSwitchGPIOs(int RxGPIO, int TxGPIO) if the module uses external RX/TX pins, like EBYTE
 - **Compatibility:** The library is designed for all SX126x chips. Not all features are available on every chip or module.
 
 ---
