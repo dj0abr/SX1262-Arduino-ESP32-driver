@@ -220,6 +220,40 @@ void SX126x::setRfSwitchPins(bool rxEn, bool txEn) {
 }
 
 /**
+ * Puts the SX126x into sleep mode.
+ *
+ * According to the datasheet, after sending the SetSleep command,
+ * the device immediately enters sleep and will not respond to SPI commands
+ * until it wakes up (either by reset or DIO1 if configured).
+ * Therefore, do NOT wait for BUSY LOW after SetSleep!
+ *
+ * @param retainConfig true: Warm start (keep configuration), false: Cold start (everything lost)
+ * @return true on success, false on error
+ */
+bool SX126x::Sleep(bool retainConfig)
+{
+    // Set RF switch to idle (if present)
+    setRfSwitchPins(false, false);
+
+    // Prepare sleep mode byte (see SX126x datasheet)
+    // 0x04 = warm start, 0x00 = cold start, both with RTC off
+    uint8_t sleepMode = retainConfig ? 0x04 : 0x00;
+
+    // Send SetSleep command (do NOT wait for BUSY after this!)
+    if (!SPIwriteCommand(SX126X_CMD_SET_SLEEP, &sleepMode, 1, false)) {
+        #ifdef DEBUG
+        Serial.println("Sleep: SPIwriteCommand failed!");
+        #endif
+        return false;
+    }
+
+    // Wait briefly to ensure command is processed
+    delay(1);
+
+    return true;
+}
+
+/**
  * Configures the SX126x module for LoRa operation with the specified parameters.
  *
  * @param spreadingFactor LoRa spreading factor (e.g. 7 to 12)

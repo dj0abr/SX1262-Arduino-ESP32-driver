@@ -367,6 +367,7 @@ class SX126x {
     bool    SetTx(uint32_t timeoutInMs);
     bool    SetRx(uint32_t timeout);
     void    SetRxTxSwitchGPIOs(int RxGPIO, int TxGPIO) ;
+    bool    Sleep(bool retainConfig);
 
   private:    
     uint8_t PacketParams[6];
