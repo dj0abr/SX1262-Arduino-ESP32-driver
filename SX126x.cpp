@@ -336,12 +336,55 @@ uint8_t SX126x::Receive(uint8_t *pData, uint16_t len)
             return 0;
         }
         SetRx(0xFFFFFF);
+        GetPacketStatus();
         return rxLen;
     }
 
     // If nothing was received, still reactivate reception
     SetRx(0xFFFFFF);
     return 0;
+}
+
+/**
+ * @brief Reads the RSSI (Received Signal Strength Indicator) value of the last received packet from the SX126x.
+ *
+ * Executes the GET_PACKET_STATUS command according to the SX126x datasheet and stores
+ * the measured RSSI value in dBm in the internal variable `rssi`.
+ * 
+ * Note:
+ * - The RSSI value is directly comparable to the typical WiFi RSSI in dBm.
+ * - SNR and SignalRSSI are also available in the buffer, but not used here.
+ * 
+ * @note This function is called after every successful reception to update
+ *       the current RSSI value.
+ */
+void SX126x::GetPacketStatus() {
+    uint8_t buf[3];
+
+    // Befehl laut Datasheet
+    if (!SPIreadCommand(SX126X_CMD_GET_PACKET_STATUS, buf, 3, true)) {
+        #ifdef DEBUG
+        Serial.println("GetPacketStatus: SPIreadCommand failed!");
+        #endif
+        rssi = 0;
+    }
+    // RSSI during last reception
+    rssi       = -buf[0] / 2;
+    // currently not used:
+    // snr        = ((buf[1] < 128) ? buf[1] : buf[1] - 256) / 4; // signed!
+    // signalRssi = -buf[2] / 2;
+}
+
+/**
+ * @brief Returns the last measured RSSI value (in dBm).
+ *
+ * The RSSI value is updated by the GetPacketStatus() function
+ * and corresponds to the signal strength of the last received packet.
+ *
+ * @return RSSI value in dBm (negative value, e.g. -45)
+ */
+int SX126x::getRSSI() {
+    return rssi;
 }
 
 /**

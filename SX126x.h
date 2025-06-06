@@ -354,7 +354,6 @@ enum SX126xError {
 #define SX126x_TXMODE_SYNC                            0x02
 #define SX126x_TXMODE_BACK2RX                         0x04
 
-
 // common low-level SPI interface
 class SX126x {
   public:
@@ -366,8 +365,9 @@ class SX126x {
     bool    Send(uint8_t *pData, uint8_t len, uint8_t mode);
     bool    SetTx(uint32_t timeoutInMs);
     bool    SetRx(uint32_t timeout);
-    void    SetRxTxSwitchGPIOs(int RxGPIO, int TxGPIO) ;
+    void    SetRxTxSwitchGPIOs(int RxGPIO, int TxGPIO);
     bool    Sleep(bool retainConfig);
+    int     getRSSI();
 
   private:    
     uint8_t PacketParams[6];
@@ -379,6 +379,8 @@ class SX126x {
 
     int     SX126x_RXEN = -1;
     int     SX126x_TXEN = -1;
+
+    int     rssi = 0;
 
     int8_t  hasTCXO = -1;
     int8_t  desiredPowerDbm = 0;
@@ -414,5 +416,6 @@ class SX126x {
     uint8_t WriteBuffer(uint8_t *txData, uint8_t txDataLen);
     bool    waitWhileBusy(uint32_t timeout_ms);
     bool    configurePower(int8_t txPowerInDbm);
+    void    GetPacketStatus();
 };
 
